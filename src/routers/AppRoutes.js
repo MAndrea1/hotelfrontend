@@ -1,23 +1,35 @@
 import React from "react";
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
-import App from "../App";
+import { Route, Routes} from "react-router-dom";
 import Home from "../components/Home";
 import Login from "../components/User/Login";
 import Register from "../components/User/Register";
-import Test from "../components/layouts/Test";
+import Guest from "../components/Guest";
+import Admin from "../components/Admin";
+import Missing from "../components/Missing";
+import Unauthorized from "../components/Unauthorized";
+import Layout from "../components/layouts/Layout";
 
 const AppRoutes = () => {
     return (
-        <Router>
-            <Routes>
-                <Route element={<Test/>}>
-                    <Route path="/" index element={<App />} />
-                    <Route path="home" element={<Home />} />
-                    <Route path="login" element={<Login />} />
-                    <Route path="login" element={<Register />} />
-                </Route>
-            </Routes>
-        </Router>
+        <Routes>
+            <Route path="/" element={<Layout/>}>
+
+                {/*Public Routes*/}
+               
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
+                <Route path="unauthorized" element={<Unauthorized />} />
+
+                {/*Private Routes*/}
+                <Route path="/" element={<Home />} />
+                <Route path="/guest" element={<Guest />} />
+                <Route path="/admin" element={<Admin />} />
+
+                {/*Private Routes*/}
+                <Route path="*" element={<Missing />} />
+
+            </Route>
+        </Routes>
     );
 }
 export default AppRoutes;

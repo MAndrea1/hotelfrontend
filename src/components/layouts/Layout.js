@@ -1,6 +1,7 @@
 import React from 'react';
+import { Col, Container, Row } from "react-bootstrap";
+import { Outlet } from "react-router-dom";
 import Appbar from "../common/Appbar";
-import {Col, Container, Row} from "react-bootstrap";
 import Footer from "../common/Footer";
 
 const Layout = () =>{
@@ -10,7 +11,7 @@ const Layout = () =>{
             <Container>
                 <Row>
                     <Col lg={12} >
-
+                        <Outlet/>
                     </Col>
                 </Row>
             </Container>
