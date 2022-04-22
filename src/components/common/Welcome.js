@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MainSearch from './MainSearch';
+import MainSearch from '../MainSearch';
 
 const Welcome = () => {
 
