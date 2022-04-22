@@ -1,13 +1,11 @@
 import AppRoutes from "./routers/AppRoutes";
 
+import React from 'react'
 
-function App() {
-  const marginTop = {
-    marginTop: "20px"
-  };
+const App = () => {
   return (
-     <AppRoutes/>
-  );
+    <AppRoutes/>
+  )
 }
 
 export default App;

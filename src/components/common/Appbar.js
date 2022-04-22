@@ -7,9 +7,10 @@ import {Link} from 'react-router-dom';
 export default class Appbar extends Component {
   render() {
     return (
-      <Navbar bg="dark" variant="dark">
+      <Navbar bg="dark" variant="dark" className='mb-5'>
         <Link to = {""} className = "navbar-brand" >
-        <FaHotel />
+        
+        <span className='m-2'><FaHotel /></span>
         <Navbar.Brand>Hotel</Navbar.Brand>
         </Link>
       <Nav className="mr-auto">
