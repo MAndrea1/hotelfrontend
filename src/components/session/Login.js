@@ -4,6 +4,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import AuthService from "../../services/auth.service";
+
 const required = (value) => {
   if (!value) {
     return (
@@ -13,6 +14,7 @@ const required = (value) => {
     );
   }
 };
+
 const Login = () => {
   let navigate = useNavigate();
   const form = useRef();

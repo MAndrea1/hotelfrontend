@@ -48,7 +48,6 @@ function App() {
     setCurrentUser(undefined);
   };
 
-
   return (
     <BrowserRouter>
     <div>

@@ -4,6 +4,12 @@ import { useState } from "react";
 import axios from "axios";
 
 const MainSearch = () => {
+  const MAXPAX = 9;
+  const list = [...Array(MAXPAX)];
+  list.forEach(element => {
+    console.log(element);
+  });
+
   const [consulta, setConsulta] = useState({
     roomNumber: "",
     bookingCheckin: "",
@@ -121,11 +127,19 @@ const MainSearch = () => {
           <Form.Group as={Col} controlId="paxNumber">
             <Form.Label>Pax Number</Form.Label>
             <Form.Control
-              type="number"
+              as="select"
               name="pax"
-              placeholder="Number of passengers"
               onChange={handleInputChange}
-            />
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </Form.Control>
           </Form.Group>
 
           <Form.Group as={Col} controlId="roomType">

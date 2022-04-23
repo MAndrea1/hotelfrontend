@@ -15,7 +15,6 @@ export default class UserList extends Component {
 
     componentDidMount() {
         this.findAllUsers();
-
     }
 
     findAllUsers() {
@@ -23,7 +22,6 @@ export default class UserList extends Component {
             .then(response => response.data)
             .then((data) => {
                 this.setState({ users: data });
-
             });
     }
 
@@ -58,7 +56,6 @@ export default class UserList extends Component {
                                   <td> {user.email}</td>
                                   <td>{user.balance} </td>
                                   <td>{user.address} </td>
-
                                   </tr>
                               ))
                               
