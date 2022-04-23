@@ -9,8 +9,10 @@ export default class Appbar extends Component {
     return (
       <Navbar bg="dark" variant="dark">
         <Link to = {""} className = "navbar-brand" >
-        <FaHotel />
-        <Navbar.Brand>Hotel</Navbar.Brand>
+          <span className='p-2'>
+            <FaHotel />
+          </span>
+        <Navbar.Brand className='p-2'>Hotel</Navbar.Brand>
         </Link>
       <Nav className="mr-auto">
         <Link to = {"AddRooms"} className = "nav-link" >Add Rooms</Link>

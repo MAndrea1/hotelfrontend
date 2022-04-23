@@ -1,6 +1,10 @@
 import './App.css';
 import React, { useState, useEffect } from "react";
 import {BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { circularProgressClasses } from '@mui/material';
+import EventBus from "./services/EventBus";
+import { FaHotel } from 'react-icons/fa';
+import "bootstrap/dist/css/bootstrap.min.css";
 import AuthService from "./services/auth.service";
 import Welcome from './components/Welcome';
 import Footer from './components/Footer';
@@ -9,10 +13,8 @@ import Profile from './components/session/Profile';
 import Register from './components/session/Register';
 import BoardAdmin from './components/boards/BoardAdmin';
 import BoardUser from './components/boards/BoardUser';
-import { FaHotel } from 'react-icons/fa';
-import "bootstrap/dist/css/bootstrap.min.css";
-import EventBus from "./services/EventBus";
-import { circularProgressClasses } from '@mui/material';
+import Booking from './components/Booking';
+import Report from './components/Report';
 
 function App() {
   const [showAdminBoard, setShowAdminBoard] = useState(false);
@@ -78,12 +80,22 @@ function App() {
           )}
           {showUserBoard && (
             <li className="nav-item">
-            <Link to={"/profile"} className="nav-link">
+            <Link to={"/booking"} className="nav-link">
               Book a Room
             </Link>
           </li>
-          )}
+          )}{
+            showUserBoard && (
+              <li className="nav-item">
+              <Link to={"/report"} className="nav-link">
+                Report
+              </Link>
+            </li>
+            )
+          }
+          
         </div>
+        
         {currentUser ? (
           <div className="navbar-nav ml-auto">            
            {showUserBoard && (
@@ -122,6 +134,8 @@ function App() {
           <Route path="/home" element={<Welcome/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
+          <Route path="/report" element={<Report/>} />
+          <Route path="/booking" element={<Booking/>} />
           <Route path="/profile" element={<Profile/>} />
           <Route path="/user" element={<BoardUser/>} />
           <Route path="/admin" element={<BoardAdmin/>} />
