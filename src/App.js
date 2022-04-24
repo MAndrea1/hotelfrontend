@@ -15,6 +15,7 @@ import EventBus from "./services/EventBus";
 import { circularProgressClasses } from "@mui/material";
 import Booking from "./components/Booking";
 import SuccessfulReserve from "./components/SuccessfulReserve";
+import DisplayInfo from "./components/DisplayInfo";
 
 function App() {
   const [showAdminBoard, setShowAdminBoard] = useState(false);
@@ -72,12 +73,17 @@ function App() {
                 </li>
                 <li className="nav-item">
                   <Link to={"/admin"} className="nav-link">
-                    Register new Guest
+                    Guests
                   </Link>
                 </li>
                 <li className="nav-item">
                   <Link to={"/admin"} className="nav-link">
-                    Make a reservation
+                    Bookings
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link to={"/rooms"} className="nav-link">
+                    Rooms
                   </Link>
                 </li>
               </>
@@ -139,6 +145,7 @@ function App() {
             <Route path="/admin" element={<BoardAdmin />} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/successful" element={<SuccessfulReserve />} />
+            <Route path="/rooms" element={<DisplayInfo />} />
           </Routes>
         </div>
         <Footer /> {/* Footer Component*/}

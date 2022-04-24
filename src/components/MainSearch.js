@@ -31,10 +31,18 @@ const MainSearch = () => {
   const [currentUser, setCurrentUser] = useState(undefined);
   const [pressedBooking, setpressedBooking] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [consulted, setConsulted] = useState(false);
+  const [roomList, setRoomList] = useState([]);
 
+  const getRooms = async () => {
+    const allRooms = await axios.get("http://localhost:8080/api/rooms");
+    setRoomList(allRooms.data);
+  };
+
+  console.log(roomList);
   useEffect(() => {
     const user = AuthService.getCurrentUser();
-
+    getRooms();
     if (user) {
       setCurrentUser(user);
     }
@@ -50,6 +58,7 @@ const MainSearch = () => {
   const enviarDatos = (event) => {
     event.preventDefault();
     console.log("enviando datos...");
+    setConsulted(true);
     setLoading(true);
     console.log(JSON.stringify(consulta));
     axios(config)
@@ -77,10 +86,8 @@ const MainSearch = () => {
   const ShowResults = () => {
     if (answer.length !== 0) {
       return <ResultTable />;
-    } else {
-      return(
-        <p>No matches</p>
-      )
+    } else if (consulted && !loading) {
+      return <p>No matches</p>;
     }
   };
 
@@ -178,10 +185,11 @@ const MainSearch = () => {
               onChange={handleInputChange}
             >
               <option value="">Any Room</option>
-              <option value="101">101</option>
-              <option value="111">111</option>
-              <option value="201">201</option>
-              <option value="301">301</option>
+              {roomList.map((room) => {
+                return <React.Fragment key={room.id}>
+                  <option value={room.id}>{room.id}</option>
+                </React.Fragment>;
+              })}
             </Form.Control>
           </Form.Group>
 
