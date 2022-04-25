@@ -1,11 +1,15 @@
 import axios from "axios";
 const API_URL = "http://localhost:8080/registration/";
 
-const register = (username, email, password) => {
+const register = (email, password, firstName, lastName, phone, country, role) => {
   return axios.post(API_URL + "signup", {
-    username,
     email,
     password,
+    firstName,
+    lastName,
+    phone,
+    country,
+    role
   });
 };
 
@@ -22,11 +26,15 @@ const login = async (email, password) => {
 };
 
 const logout = () => {
-  localStorage.removeItem("user");
+  localStorage.clear()
 };
 
 const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
+};
+
+const getCurrentBookingData = () => {
+  return JSON.parse(localStorage.getItem("bookingData"));
 };
 
 const AuthService = {
@@ -34,6 +42,7 @@ const AuthService = {
   login,
   logout,
   getCurrentUser,
+  getCurrentBookingData,
 };
 
 export default AuthService;

@@ -1,9 +1,13 @@
 import React from "react";
+import AuthService from "../services/auth.service";
 import { Form, Button, Col, Row, Table } from "react-bootstrap";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const MainSearch = () => {
+  let navigate = useNavigate();
+
   const [consulta, setConsulta] = useState({
     roomNumber: "",
     bookingCheckin: "",
@@ -11,7 +15,38 @@ const MainSearch = () => {
     pax: 1,
     roomType: "",
   });
+
+  const [bookingData, setBookingData] = useState({
+    room: "",
+    listRooms: [],
+    bookingCheckin: "",
+    bookingCheckout: "",
+    bookingBreakfast: 0,
+    bookingNotes: "",
+    status: "",
+    paymentMethod: "",
+  });
+
   const [answer, setAnswer] = useState("");
+  const [currentUser, setCurrentUser] = useState(undefined);
+  const [pressedBooking, setpressedBooking] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [consulted, setConsulted] = useState(false);
+  const [roomList, setRoomList] = useState([]);
+
+  const getRooms = async () => {
+    const allRooms = await axios.get("http://localhost:8080/api/rooms");
+    setRoomList(allRooms.data);
+  };
+
+  console.log(roomList);
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+    getRooms();
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, []);
 
   const handleInputChange = (event) => {
     setConsulta({
@@ -22,17 +57,19 @@ const MainSearch = () => {
 
   const enviarDatos = (event) => {
     event.preventDefault();
-    console.log(
-      "enviando datos..." + consulta.roomNumber + " " + consulta.bookingCheckin
-    );
+    console.log("enviando datos...");
+    setConsulted(true);
+    setLoading(true);
     console.log(JSON.stringify(consulta));
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         setAnswer(response.data);
+        setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
+        setLoading(false);
       });
   };
 
@@ -46,6 +83,14 @@ const MainSearch = () => {
     data: data,
   };
 
+  const ShowResults = () => {
+    if (answer.length !== 0) {
+      return <ResultTable />;
+    } else if (consulted && !loading) {
+      return <p>No matches</p>;
+    }
+  };
+
   const ResultTable = () => {
     return (
       <Table striped bordered hover variant="dark">
@@ -55,16 +100,26 @@ const MainSearch = () => {
             <th>Pax</th>
             <th>Price</th>
             <th>Type</th>
+            <th>Book</th>
           </tr>
         </thead>
         <tbody>
           {answer.map((room) => {
             return (
-              <tr key={room.id}>
+              <tr key={room.id} className="flex">
                 <td>{room.id}</td>
                 <td>{room.roomMaxpax}</td>
                 <td>{room.roomPrice}</td>
                 <td>{room.fkRoomtype.roomtypeDetail}</td>
+                <td>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => saveData(room)}
+                  >
+                    Book this room
+                  </button>
+                </td>
               </tr>
             );
           })}
@@ -73,11 +128,30 @@ const MainSearch = () => {
     );
   };
 
-  const ShowResults = () => {
-    if (answer.length !== 0) {
-      return <ResultTable />;
-    }
+  const saveData = (room) => {
+    setBookingData({
+      room: room,
+      listRooms: [room.id],
+      bookingCheckin: consulta.bookingCheckin,
+      bookingCheckout: consulta.bookingCheckout,
+      bookingBreakfast: 0,
+      bookingNotes: "",
+      status: "",
+      paymentMethod: "",
+    });
+    setpressedBooking(true);
   };
+
+  useEffect(() => {
+    if (pressedBooking) {
+      localStorage.setItem("bookingData", JSON.stringify(bookingData));
+      if (currentUser === undefined) {
+        navigate("/login");
+      } else {
+        navigate("/booking");
+      }
+    }
+  }, [pressedBooking, bookingData, navigate, currentUser]);
 
   return (
     <div className="CheckAvailability">
@@ -111,21 +185,27 @@ const MainSearch = () => {
               onChange={handleInputChange}
             >
               <option value="">Any Room</option>
-              <option value="101">101</option>
-              <option value="111">111</option>
-              <option value="201">201</option>
-              <option value="301">301</option>
+              {roomList.map((room) => {
+                return <React.Fragment key={room.id}>
+                  <option value={room.id}>{room.id}</option>
+                </React.Fragment>;
+              })}
             </Form.Control>
           </Form.Group>
 
           <Form.Group as={Col} controlId="paxNumber">
             <Form.Label>Pax Number</Form.Label>
-            <Form.Control
-              type="number"
-              name="pax"
-              placeholder="Number of passengers"
-              onChange={handleInputChange}
-            />
+            <Form.Control as="select" name="pax" onChange={handleInputChange}>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </Form.Control>
           </Form.Group>
 
           <Form.Group as={Col} controlId="roomType">
@@ -144,11 +224,14 @@ const MainSearch = () => {
           </Form.Group>
         </Row>
 
-        <Form.Group className="mb-3" id="formGridCheckbox">
-          <Form.Check type="checkbox" label="With Breakfast" />
-        </Form.Group>
+        {/* <Form.Group className="mb-3" id="formGridCheckbox">
+          <Form.Check type="checkbox" label="With Breakfast" onClick={() => {setBookingData({...bookingData, bookingBreakfast: 1})}} />
+        </Form.Group> */}
 
         <Button variant="primary" type="submit">
+          {loading && (
+            <span className="spinner-border spinner-border-sm"></span>
+          )}
           Submit
         </Button>
       </Form>

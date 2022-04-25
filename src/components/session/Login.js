@@ -1,9 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import AuthService from "../../services/auth.service";
+
 const required = (value) => {
   if (!value) {
     return (
@@ -13,6 +14,7 @@ const required = (value) => {
     );
   }
 };
+
 const Login = () => {
   let navigate = useNavigate();
   const form = useRef();
@@ -21,6 +23,17 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  const [logged, setLogged] = useState(false);
+  const [bookedRoom, setbookedRoom] = useState("");
+
+  useEffect(() => {
+    const bookingData = AuthService.getCurrentBookingData();
+
+    if (bookingData) {
+      setbookedRoom(bookingData);
+    }
+  }, []);
 
   const onChangeusername = (e) => {
     const username = e.target.value;
@@ -42,8 +55,13 @@ const Login = () => {
       .then(
         () => {
           console.log("success")
+          if (bookedRoom === "") {
           navigate("/");
           window.location.reload();
+        } else {
+          navigate("/booking")
+          window.location.reload();
+        }
         },
         (error) => {
           const resMessage =
@@ -60,8 +78,7 @@ const Login = () => {
       setLoading(false);
     }
   };
-
-  
+ 
   return (
     <div className="col-md-12">
       <div className="card card-container">

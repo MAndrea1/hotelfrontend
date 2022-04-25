@@ -39,8 +39,8 @@
 
 label {
   display: block;
-  margin-top: 10px;
 }
+
 .card-container.card {
   max-width: 350px !important;
   padding: 40px 40px;
@@ -66,3 +66,4 @@ label {
   -webkit-border-radius: 50%;
   border-radius: 50%;
 }
+

@@ -27,7 +27,7 @@ const BoardAdmin = () => {
         }
       }
     );
-  }, [content]);
+  }, []);
 
   return (
     <div className="container">
